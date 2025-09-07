@@ -12,7 +12,7 @@ v01_2023_df = pl.read_csv(raw_csv_path)
 v02_2023_df = v01_2023_df.select([
     "SEXVAR", "_AGE_G", "WEIGHT2", "HEIGHT3", "EDUCA", "EMPLOY1", "INCOME3", "MARITAL",
     "PRIMINS1", "PERSDOC3", "MEDCOST1", "CHECKUP1", "GENHLTH", "PHYSHLTH", "MENTHLTH", "POORHLTH",
-    "_SMOKER3", "AVEDRNK3", "EXERANY2", "BPHIGH6", "BPMEDS1", "TOLDHI3", "CHOLMED3", 
+    "_SMOKER3", "AVEDRNK3", "EXERANY2", "BPHIGH6", "BPMEDS1", "TOLDHI3", "CHOLMED3", "CVDSTRK3", "CVDCRHD4", 
     "DIABETE4"
     ])
 
@@ -20,7 +20,7 @@ new_columns = {
     "SEXVAR" : "SEX", "_AGE_G" : "AGE", "WEIGHT2" : "WGHT (lbs)", "HEIGHT3" : "HGHT (ft)", "EDUCA" : "EDUCATION_LEVEL", 
     "EMPLOY1" : "EMPLOYMENT_STATUS", "INCOME3" : "INCOME_LEVEL", "MARITAL" : "MARITAL_STATUS",
     "PRIMINS1" : "INSR_STATUS", "PERSDOC3" : "DCTR_STATUS", "MEDCOST1" : "COST_STATUS", "CHECKUP1" : "CHKP_STATUS", "GENHLTH" : "GEN_HLTH", "PHYSHLTH" : "PHYS_HLTH_DAYS", "MENTHLTH" : "MENT_HLTH_DAYS", "POORHLTH" : "POOR_HLTH_DAYS",
-    "_SMOKER3" : "SMOK_STATUS", "AVEDRNK3" : "ALHL_STATUS", "EXERANY2" : "EXER_STATUS", "BPHIGH6" : "HIGH_BP", "BPMEDS1" : "BP_MEDS", "TOLDHI3" : "HIGH_CHOL", "CHOLMED3" : "CHOL_MEDS",
+    "_SMOKER3" : "SMOK_STATUS", "AVEDRNK3" : "ALHL_STATUS", "EXERANY2" : "EXER_STATUS", "BPHIGH6" : "HIGH_BP", "BPMEDS1" : "BP_MEDS", "TOLDHI3" : "HIGH_CHOL", "CHOLMED3" : "CHOL_MEDS", "CVDSTRK3" : "HAD_STROKE", "CVDCRHD4" : "HAD_HEARTDISEASE",
     "DIABETE4" : "DIABETES_STATUS",
     }
 
@@ -358,7 +358,7 @@ EXCR_STATUS_mapping = {
 }
 
 v23_2023_df = v22_2023_df.with_columns(
-    pl.col("EXER_STATUS").replace_strict(EXCR_mapping, default=None).alias("EXER_STATUS")
+    pl.col("EXER_STATUS").replace_strict(EXCR_STATUS_mapping, default=None).alias("EXER_STATUS")
 )
 
 # Process `HIGH_BP`
@@ -415,6 +415,32 @@ v27_2023_df = v26_2023_df.with_columns(
     pl.col("CHOL_MEDS").replace_strict(CHOL_MEDS_mapping, default=None).alias("CHOL_MEDS")
 )
 
+# Process `HAD_STROKE`
+# Map of 0-1 scale:
+# 0: No
+# 1: Yes
+
+HAD_STROKE_mapping = {
+    1: 1, 2: 0, 7: None, 9: None
+}
+
+v28_2023_df = v27_2023_df.with_columns(
+    pl.col("HAD_STROKE").replace_strict(HAD_STROKE_mapping, default=None).alias("HAD_STROKE")
+)
+
+# Process `HAD_HEARTDISEASE`
+# Map of 0-1 scale:
+# 0: No
+# 1: Yes
+
+HAD_HEARTDISEASE_mapping = {
+    1: 1, 2: 0, 7: None, 9: None
+}
+
+v29_2023_df = v28_2023_df.with_columns(
+    pl.col("HAD_HEARTDISEASE").replace_strict(HAD_HEARTDISEASE_mapping, default=None).alias("HAD_HEARTDISEASE")
+)
+
 # Process `DIABETES_STATUS`
 # Map of 0-3 scale:
 # 0: No
@@ -426,25 +452,25 @@ DIABETES_STATUS_mapping = {
     1: 3, 2: 2, 3: 0, 4: 1, 7: None, 9: None
 }
 
-v28_2023_df = v27_2023_df.with_columns(
+v30_2023_df = v29_2023_df.with_columns(
     pl.col("DIABETES_STATUS").replace_strict(DIABETES_STATUS_mapping, default=None).alias("DIABETES_STATUS")
 )
 
 # Arrange columns properly
 
-v29_2023_df = v28_2023_df.select([
+v31_2023_df = v30_2023_df.select([
     "YEAR", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI", "EDUCATION_LEVEL", "EMPLOYMENT_STATUS", "INCOME_LEVEL", "MARITAL_STATUS",
     "INSR_STATUS", "DCTR_STATUS", "COST_STATUS", "CHKP_STATUS", "GEN_HLTH", "PHYS_HLTH_DAYS", "MENT_HLTH_DAYS", "POOR_HLTH_DAYS",
-    "SMOK_STATUS", "ALHL_STATUS", "EXER_STATUS", "HIGH_BP", "BP_MEDS", "HIGH_CHOL", "CHOL_MEDS",
+    "SMOK_STATUS", "ALHL_STATUS", "EXER_STATUS", "HIGH_BP", "BP_MEDS", "HIGH_CHOL", "CHOL_MEDS", "HAD_STROKE", "HAD_HEARTDISEASE",
     "DIABETES_STATUS"
 ])
 
 # Drop rows with null values in critical columns
 
-v30_2023_df = v29_2023_df.drop_nulls(subset=[
+v32_2023_df = v31_2023_df.drop_nulls(subset=[
     "DIABETES_STATUS", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI"
 ])
 
 # Export cleaned dataframe to CSV
 
-v30_2023_df.write_csv(cleaned_csv_path)
+v32_2023_df.write_csv(cleaned_csv_path)
