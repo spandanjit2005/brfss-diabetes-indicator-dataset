@@ -353,7 +353,7 @@ v22_2023_df = v21_2023_df.with_columns(
 # 0: No
 # 1: Yes
 
-EXCR_mapping = {
+EXCR_STATUS_mapping = {
     1: 1, 2: 0, 7: None, 9: None
 }
 
