@@ -20,7 +20,7 @@ new_columns = {
     "SEXVAR" : "SEX", "_AGE_G" : "AGE", "WEIGHT2" : "WGHT (lbs)", "HEIGHT3" : "HGHT (ft)", "EDUCA" : "EDUCATION_LEVEL", 
     "EMPLOY1" : "EMPLOYMENT_STATUS", "INCOME3" : "INCOME_LEVEL", "MARITAL" : "MARITAL_STATUS",
     "PRIMINS1" : "INSR_STATUS", "PERSDOC3" : "DCTR_STATUS", "MEDCOST1" : "COST_STATUS", "CHECKUP1" : "CHKP_STATUS", "GENHLTH" : "GEN_HLTH", "PHYSHLTH" : "PHYS_HLTH_DAYS", "MENTHLTH" : "MENT_HLTH_DAYS", "POORHLTH" : "POOR_HLTH_DAYS",
-    "_SMOKER3" : "SMOK_STATUS", "AVEDRNK3" : "ALHL_STATUS", "EXERANY2" : "EXER", "BPHIGH6" : "HIGH_BP", "BPMEDS1" : "BP_MEDS", "TOLDHI3" : "HIGH_CHOL", "CHOLMED3" : "CHOL_MEDS",
+    "_SMOKER3" : "SMOK_STATUS", "AVEDRNK3" : "ALHL_STATUS", "EXERANY2" : "EXER_STATUS", "BPHIGH6" : "HIGH_BP", "BPMEDS1" : "BP_MEDS", "TOLDHI3" : "HIGH_CHOL", "CHOLMED3" : "CHOL_MEDS",
     "DIABETE4" : "DIABETES_STATUS",
     }
 
@@ -58,7 +58,7 @@ v06_2023_df = v05_2023_df.with_columns(
     pl.col("AGE").replace_strict(AGE_mapping, default=None).cast(pl.Int64).alias("AGE")
 )
 
-# Process `WEIGHT (lbs)`
+# Process `WGHT (lbs)`
 # Convert from kg to lbs where necessary
 
 def normalize_weight(x):
@@ -78,7 +78,7 @@ v07_2023_df = v06_2023_df.with_columns(
     pl.col("WGHT (lbs)").map_elements(normalize_weight).alias("WGHT (lbs)")
 )
 
-# Process `HEIGHT (ft)`
+# Process `HGHT (ft)`
 # Convert from cm to ft where necessary
 # Remove outliers (> 9 ft)
 
@@ -358,7 +358,7 @@ EXCR_mapping = {
 }
 
 v23_2023_df = v22_2023_df.with_columns(
-    pl.col("EXER").replace_strict(EXCR_mapping, default=None).alias("EXER")
+    pl.col("EXER_STATUS").replace_strict(EXCR_mapping, default=None).alias("EXER_STATUS")
 )
 
 # Process `HIGH_BP`
@@ -435,7 +435,7 @@ v28_2023_df = v27_2023_df.with_columns(
 v29_2023_df = v28_2023_df.select([
     "YEAR", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI", "EDUCATION_LEVEL", "EMPLOYMENT_STATUS", "INCOME_LEVEL", "MARITAL_STATUS",
     "INSR_STATUS", "DCTR_STATUS", "COST_STATUS", "CHKP_STATUS", "GEN_HLTH", "PHYS_HLTH_DAYS", "MENT_HLTH_DAYS", "POOR_HLTH_DAYS",
-    "SMOK_STATUS", "ALHL_STATUS", "EXER", "HIGH_BP", "BP_MEDS", "HIGH_CHOL", "CHOL_MEDS",
+    "SMOK_STATUS", "ALHL_STATUS", "EXER_STATUS", "HIGH_BP", "BP_MEDS", "HIGH_CHOL", "CHOL_MEDS",
     "DIABETES_STATUS"
 ])
 
