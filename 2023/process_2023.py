@@ -5,42 +5,26 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 raw_csv_path = os.path.join(script_dir, '2023_BRFSS_RAW.csv')
 cleaned_csv_path = os.path.join(script_dir, '2023_BRFSS_CLEANED.csv')
 
-raw_2023_df = pl.read_csv(raw_csv_path)
+v01_2023_df = pl.read_csv(raw_csv_path)
 
 # Extract & rename relevant columns for dataset
 
-v01_2023_df = raw_2023_df.select([
-    "_STATE", "SEXVAR", "_AGE_G", "WEIGHT2", "HEIGHT3", "EDUCA", "EMPLOY1", "INCOME3", "MARITAL",
+v02_2023_df = v01_2023_df.select([
+    "SEXVAR", "_AGE_G", "WEIGHT2", "HEIGHT3", "EDUCA", "EMPLOY1", "INCOME3", "MARITAL",
     "PRIMINS1", "PERSDOC3", "MEDCOST1", "CHECKUP1", "GENHLTH", "PHYSHLTH", "MENTHLTH", "POORHLTH",
     "_SMOKER3", "AVEDRNK3", "EXERANY2", "BPHIGH6", "BPMEDS1", "TOLDHI3", "CHOLMED3", 
     "DIABETE4"
     ])
 
 new_columns = {
-    "_STATE" : "STATE", "SEXVAR" : "SEX", "_AGE_G" : "AGE", "WEIGHT2" : "WGHT (lbs)", "HEIGHT3" : "HGHT (ft)", "EDUCA" : "EDUCATION_LEVEL", 
+    "SEXVAR" : "SEX", "_AGE_G" : "AGE", "WEIGHT2" : "WGHT (lbs)", "HEIGHT3" : "HGHT (ft)", "EDUCA" : "EDUCATION_LEVEL", 
     "EMPLOY1" : "EMPLOYMENT_STATUS", "INCOME3" : "INCOME_LEVEL", "MARITAL" : "MARITAL_STATUS",
     "PRIMINS1" : "INSR_STATUS", "PERSDOC3" : "DCTR_STATUS", "MEDCOST1" : "COST_STATUS", "CHECKUP1" : "CHKP_STATUS", "GENHLTH" : "GEN_HLTH", "PHYSHLTH" : "PHYS_HLTH_DAYS", "MENTHLTH" : "MENT_HLTH_DAYS", "POORHLTH" : "POOR_HLTH_DAYS",
     "_SMOKER3" : "SMOK_STATUS", "AVEDRNK3" : "ALHL_STATUS", "EXERANY2" : "EXER", "BPHIGH6" : "HIGH_BP", "BPMEDS1" : "BP_MEDS", "TOLDHI3" : "HIGH_CHOL", "CHOLMED3" : "CHOL_MEDS",
     "DIABETE4" : "DIABETES_STATUS",
     }
 
-v02_2023_df = v01_2023_df.rename(new_columns)
-
-# Process `STATE`
-
-state_labels = {
-    1: "Alabama", 2: "Alaska", 4: "Arizona", 5: "Arkansas", 6: "California", 8: "Colorado", 9: "Connecticut", 10: "Delaware",
-    11: "District of Columbia", 12: "Florida", 13: "Georgia", 15: "Hawaii", 16: "Idaho", 17: "Illinois", 18: "Indiana", 19: "Iowa",
-    20: "Kansas", 22: "Louisiana", 23: "Maine", 24: "Maryland", 25: "Massachusetts", 26: "Michigan", 27: "Minnesota", 28: "Mississippi",
-    29: "Missouri", 30: "Montana", 31: "Nebraska", 32: "Nevada", 33: "New Hampshire", 34: "New Jersey", 35: "New Mexico", 36: "New York",
-    37: "North Carolina", 38: "North Dakota", 39: "Ohio", 40: "Oklahoma", 41: "Oregon", 44: "Rhode Island", 45: "South Carolina", 46: "South Dakota",
-    47: "Tennessee", 48: "Texas", 49: "Utah", 50: "Vermont", 51: "Virginia", 53: "Washington", 54: "West Virginia", 55: "Wisconsin", 56: "Wyoming",
-    66: "Guam", 72: "Puerto Rico", 78: "Virgin Islands"
-}
-
-v03_2023_df = v02_2023_df.with_columns(
-    pl.col("STATE").map_elements(lambda x: state_labels.get(x, None)).alias("STATE")
-)
+v03_2023_df = v02_2023_df.rename(new_columns)
 
 # Add `YEAR` = 2023
 
@@ -449,7 +433,7 @@ v28_2023_df = v27_2023_df.with_columns(
 # Arrange columns properly
 
 v29_2023_df = v28_2023_df.select([
-    "STATE", "YEAR", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI", "EDUCATION_LEVEL", "EMPLOYMENT_STATUS", "INCOME_LEVEL", "MARITAL_STATUS",
+    "YEAR", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI", "EDUCATION_LEVEL", "EMPLOYMENT_STATUS", "INCOME_LEVEL", "MARITAL_STATUS",
     "INSR_STATUS", "DCTR_STATUS", "COST_STATUS", "CHKP_STATUS", "GEN_HLTH", "PHYS_HLTH_DAYS", "MENT_HLTH_DAYS", "POOR_HLTH_DAYS",
     "SMOK_STATUS", "ALHL_STATUS", "EXER", "HIGH_BP", "BP_MEDS", "HIGH_CHOL", "CHOL_MEDS",
     "DIABETES_STATUS"
