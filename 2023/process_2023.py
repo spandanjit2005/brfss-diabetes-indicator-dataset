@@ -456,9 +456,13 @@ v30_2023_df = v29_2023_df.with_columns(
     pl.col("DIABETES_STATUS").replace_strict(DIABETES_STATUS_mapping, default=None).alias("DIABETES_STATUS")
 )
 
+v31_2023_df = v30_2023_df.filter(
+    ~((pl.col("DIABETES_STATUS") == 2) & (pl.col("SEX") == 1))
+)
+
 # Arrange columns properly
 
-v31_2023_df = v30_2023_df.select([
+v32_2023_df = v31_2023_df.select([
     "YEAR", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI", "EDUCATION_LEVEL", "EMPLOYMENT_STATUS", "INCOME_LEVEL", "MARITAL_STATUS",
     "INSR_STATUS", "DCTR_STATUS", "COST_STATUS", "CHKP_STATUS", "GEN_HLTH", "PHYS_HLTH_DAYS", "MENT_HLTH_DAYS", "POOR_HLTH_DAYS",
     "SMOK_STATUS", "ALHL_STATUS", "EXER_STATUS", "HIGH_BP", "BP_MEDS", "HIGH_CHOL", "CHOL_MEDS", "HAD_STROKE", "HAD_HEARTDISEASE",
@@ -467,10 +471,10 @@ v31_2023_df = v30_2023_df.select([
 
 # Drop rows with null values in critical columns
 
-v32_2023_df = v31_2023_df.drop_nulls(subset=[
+v33_2023_df = v32_2023_df.drop_nulls(subset=[
     "DIABETES_STATUS", "SEX", "AGE", "WGHT (lbs)", "HGHT (ft)", "BMI"
 ])
 
 # Export cleaned dataframe to CSV
 
-v32_2023_df.write_csv(cleaned_csv_path)
+v33_2023_df.write_csv(cleaned_csv_path)
