@@ -1,0 +1,17 @@
+.venv/
+
+199*/
+200[0-4]/
+
+# BRFSS Codebooks
+*.pdf
+*.html
+
+# Large Data Files
+*.XPT
+*.csv
+
+# Test Jupyter Notebooks
+test_200[5-9].ipynb
+test_201[0-9].ipynb
+test_202[0-9].ipynb
