@@ -12,6 +12,11 @@
 *.csv
 *.parquet
 
+*.zip
+
+csv/
+parquet/
+
 # Test Jupyter Notebooks
 test_200[5-9].ipynb
 test_201[0-9].ipynb

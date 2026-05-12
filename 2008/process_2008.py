@@ -387,8 +387,8 @@ data_2008 = data_2008.with_columns([
 # Process `diabetes`
 DIABETES_map = {
     1: "Diabetic",
-    2: "No",
-    3: "No",
+    2: "Non-diabetic",
+    3: "Non-diabetic",
     4: "Pre-diabetic"
 }
 
