@@ -10,6 +10,7 @@
 # Large Data Files
 *.XPT
 *.csv
+*.parquet
 
 # Test Jupyter Notebooks
 test_200[5-9].ipynb
