@@ -93,10 +93,10 @@ main
 ```
 
 ## Data Source
-- CDC BRFSS Annual Survey Data (public domain)
+- CDC BRFSS Annual Survey Data:
 https://www.cdc.gov/brfss/annual_data/annual_data.htm
 
-- BRFSS Diabetes Indicator Dataset on Kaggle
+- BRFSS Diabetes Indicator Dataset on Kaggle: https://www.kaggle.com/datasets/spandanjit2005/brfss-diabetes-indicator-dataset
   
 
 ## License
